@@ -1,0 +1,440 @@
+;ATTACKING ========================================
+
+(defrule
+    (current-age == feudal-age)
+    (military-population >= 10) ;when we have 30 military, attack!
+=>
+    (attack-now)
+)
+(defrule
+    (current-age == castle-age)
+    (civilian-population >= 60) ; resource limited
+    (military-population >= 30) ;when we have 30 military, attack!
+=>
+    (attack-now)
+)
+;STRATEGIC NUMBERS ========================================
+
+(defrule ;initial numbers
+    (true)
+=>
+    (set-strategic-number sn-percent-civilian-explorers 0) ;don't scout with villagers
+    (set-strategic-number sn-total-number-explorers 1) ;scout with our scout!
+    (set-strategic-number sn-number-explore-groups 1)
+    (set-strategic-number sn-enable-boar-hunting 1) ;take the boar!
+    (disable-self)
+)
+
+(defrule
+    (current-age == dark-age)
+=>
+    (set-strategic-number sn-food-gatherer-percentage 80)
+    (set-strategic-number sn-wood-gatherer-percentage 20)
+    (set-strategic-number sn-gold-gatherer-percentage 0)
+    (set-strategic-number sn-stone-gatherer-percentage 0)
+    (disable-self)
+)
+
+(defrule
+    (current-age == feudal-age)
+=>
+    (set-strategic-number sn-food-gatherer-percentage 39)
+    (set-strategic-number sn-wood-gatherer-percentage 35)
+    (set-strategic-number sn-gold-gatherer-percentage 18)
+    (set-strategic-number sn-stone-gatherer-percentage 8)
+    (disable-self)
+)
+
+(defrule
+    (current-age == castle-age)
+=>
+    (set-strategic-number sn-food-gatherer-percentage 30)
+    (set-strategic-number sn-wood-gatherer-percentage 45)
+    (set-strategic-number sn-gold-gatherer-percentage 20)
+    (set-strategic-number sn-stone-gatherer-percentage 5)
+    (disable-self)
+)
+
+
+(defrule
+    (civilian-population >= 18)
+    (can-research feudal-age)
+=>
+    (research feudal-age)
+)
+
+
+(defrule
+    (civilian-population >= 27)
+    (can-research castle-age)
+=>
+    (research castle-age)
+)
+
+
+;RESEARCH ========================================
+;Notice that this section is above units, this is so we can research stuff before we queue stuff.
+
+(defrule
+    (can-research ri-loom)
+=>
+    (research ri-loom)
+)
+
+(defrule
+    (can-research  ri-double-bit-axe)
+=>
+    (research  ri-double-bit-axe)
+)
+
+
+(defrule
+    (can-research  ri-bow-saw)
+=>
+    (research  ri-bow-saw)
+)
+
+(defrule
+    (can-research  ri-two-man-saw)
+=>
+    (research  ri-two-man-saw)
+)         
+
+(defrule
+    (can-research ri-horse-collar)
+=>
+    (research ri-horse-collar)
+)         
+
+
+(defrule
+    (can-research ri-heavy-plow)
+=>
+    (research ri-heavy-plow)
+)    
+
+(defrule
+    (can-research ri-crop-rotation)
+=>
+    (research ri-crop-rotation)
+)    
+
+(defrule
+    (can-research  ri-wheel-barrow)
+=>
+    (research ri-wheel-barrow)
+)    
+
+
+(defrule
+    (can-research  ri-hand-cart)
+=>
+    (research ri-hand-cart)
+)    
+
+
+; researh army related===============
+     
+(defrule
+    (can-research  ri-elite-skirmisher)
+=>
+    (research  ri-elite-skirmisher)
+)
+
+
+    (defrule
+    (can-research ri-fletching)
+=>
+    (research ri-fletching)
+)
+      
+
+(defrule
+    (can-research  ri-pikeman)
+=>
+    (research  ri-pikeman)
+)
+
+(defrule
+    (current-age >= castle-age)
+    (can-research  ri-pikeman)
+=>
+    (research  ri-pikeman)
+)
+
+(defrule
+    (current-age >= castle-age)
+    (can-research  ri-squires)
+=>
+    (research ri-squires)
+)
+
+(defrule
+    (current-age >= castle-age)
+    (building-type-count-total castle > 1) ;construct two archery ranges.
+    (can-research  ri-bodkin-arrow)
+=>
+    (research ri-bodkin-arrow)
+)
+
+     
+;============gold and stone mining 
+(defrule
+    (building-type-count-total castle > 1) ;construct two archery ranges.
+    (can-research  ri-gold-mining)
+=>
+    (research ri-gold-mining)
+)
+
+(defrule
+    (building-type-count-total castle > 1) ;construct two archery ranges.
+    (can-research  ri-stone-mining)
+=>
+    (research ri-stone-mining)
+)
+(defrule
+    (current-age >= castle-age)
+    (building-type-count-total castle > 1)
+    (can-research   ri-gold-mining)
+=>
+    (research  ri-gold-mining)
+)
+(defrule
+    (current-age >= castle-age)
+    (building-type-count-total castle > 1)
+    (can-research   ri-gold-mining)
+=>
+    (research  ri-gold-mining)
+)
+(defrule
+    (current-age >= castle-age)
+    (building-type-count-total castle > 2)
+    (can-research   ri-stone-shaft-mining)
+=>
+    (research  ri-stone-shaft-mining)
+)
+(defrule
+    (current-age >= castle-age)
+    (building-type-count-total castle > 2)
+    (can-research  ri-gold-shaft-mining)
+=>
+    (research  ri-gold-shaft-mining)
+)
+
+
+(defrule
+    (current-age >= castle-age)
+    (building-type-count-total castle > 1)
+    (can-research   ri-padded-archer-armor)
+=>
+    (research  ri-padded-archer-armor)
+)
+
+
+
+(defrule
+    (current-age >= castle-age)
+    (building-type-count-total castle > 1)
+    (can-research    ri-ballistics)
+=>
+    (research  ri-ballistics)
+)
+
+
+;UNITS ========================================
+
+(defrule
+    (civilian-population < 130) ;if we have less than 130 villagers, train a villager.
+    (can-train villager)
+=>
+    (train villager)
+)
+
+
+
+(defrule
+    (current-age >= feudal-age)
+    (can-train cavalry-archer-line)
+=>
+    (train cavalry-archer-line)
+)
+
+
+(defrule
+    (current-age >= castle-age)
+    (can-train spearman-line)
+    (civilian-population >= 50)
+=>
+    (train spearman-line)
+)
+
+
+(defrule
+    (current-age >= castle-age)
+    (civilian-population >= 50)
+    (can-train chu-ko-nu-line)
+=>
+    (train chu-ko-nu-line)
+)
+
+(defrule ;monastery
+    (current-age == castle-age)
+    (unit-type-count-total monk < 3)
+    (can-train  monk)
+=>
+    (train monk)
+)
+
+;BUILDINGS ========================================
+
+(defrule ;we need houses!
+    (housing-headroom < 5) ;if we are nearly housed
+    (population-headroom != 0) ;if we are not population blocked
+    (can-build house)
+=>
+    (build house)
+)
+
+(defrule ;lumber camps
+    (resource-found wood) ;if we have scouted wood
+    (dropsite-min-distance wood > 3) ;if the closest tree is more than 3 tiles away from a dropoff point
+    (can-build lumber-camp)
+=>
+    (build lumber-camp)
+)
+
+(defrule ;mills
+    (resource-found food)
+    (dropsite-min-distance food > 3)
+    (can-build mill)
+=>
+    (build mill)
+)
+
+(defrule ;farms
+    (current-age == feudal-age)
+    (building-type-count-total farm < 8)
+    (can-build farm)
+=>
+    (build farm)
+)
+
+
+(defrule ;farms
+    (current-age == dark-age)
+    (building-type-count-total farm < 6)
+    (can-build farm)
+=>
+    (build farm)
+)
+
+(defrule ;farms
+    (current-age == castle-age)
+    (building-type-count-total farm < 20)
+    (can-build farm)
+=>
+    (build farm)
+)
+
+(defrule ;monastery
+    (current-age == castle-age)
+    (building-type-count-total monastery < 1)
+    (can-build monastery)
+=>
+    (build monastery)
+)
+
+
+(defrule ;university
+    (current-age == castle-age)
+    (building-type-count-total university < 1)
+    (can-build university)
+=>
+    (build university)
+)
+
+
+
+(defrule ;mining camps
+    (current-age >= feudal-age)
+    (resource-found gold) ;if we have scouted gold
+    (dropsite-min-distance gold > 3) ;if the closest gold pile is more than 3 tiles away from a dropoff point
+    (can-build mining-camp)
+=>
+    (build mining-camp)
+)
+
+
+(defrule ;mining camps
+    (current-age >= castle-age)
+    (resource-found gold) ;if we have scouted gold
+    (dropsite-min-distance gold > 5) ;if the closest gold pile is more than 3 tiles away from a dropoff point
+    (can-build  watch-tower)
+=>
+    (build watch-tower)
+)
+
+(defrule ;mining camps
+    (current-age >= feudal-age)
+    (resource-found stone) ;if we have scouted gold
+    (dropsite-min-distance stone > 3) ;if the closest stone pile is more than 3 tiles away from a dropoff point
+    (can-build mining-camp)
+=>
+    (build mining-camp)
+)
+
+(defrule
+    (building-type-count-total blacksmith == 0) ;if no blacksmith, build a blacksmith.
+    (can-build blacksmith)
+=>
+    (build blacksmith)
+)
+
+(defrule
+    (current-age >= feudal-age) ; >= is greater than or equal to, so do this in the castle age as well.
+    (building-type-count-total barracks == 0)
+    (can-build barracks)
+=>
+    (build barracks)
+)
+
+(defrule
+    (current-age == feudal-age)
+    (building-type-count-total archery-range < 2) ;construct two archery ranges.
+    (can-build archery-range)
+=>
+    (build archery-range)
+)
+
+(defrule
+    (current-age >= castle-age)
+    (building-type-count-total town-center < 3) ;construct 3 town centers
+    (can-build town-center)
+=>
+    (build town-center)
+)
+
+(defrule
+    (current-age >= castle-age)
+    (building-type-count-total castle < 2) ;construct two archery ranges.
+    (can-build castle)
+=>
+    (build castle)
+)
+
+(defrule
+    (current-age == castle-age)
+    (building-type-count-total archery-range < 5) ;
+    (can-build archery-range)
+=>
+    (build archery-range)
+)
+
+
+(defrule
+    (current-age >= castle-age)
+    (building-type-count-total barracks < 5)
+    (can-build barracks)
+=>
+    (build barracks)
+)

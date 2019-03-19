@@ -1,0 +1,50 @@
+;ATTACKING ========================================
+
+
+(defrule
+    (current-age == feudal-age)
+    (military-population >= 10) ;when we have 30 military, attack!
+=>
+    (attack-now)
+)
+
+
+;STRATEGIC NUMBERS ========================================
+
+(defrule
+    (current-age == feudal-age)
+=>
+    (set-strategic-number sn-food-gatherer-percentage 39)
+    (set-strategic-number sn-wood-gatherer-percentage 35)
+    (set-strategic-number sn-gold-gatherer-percentage 18)
+    (set-strategic-number sn-stone-gatherer-percentage 8)
+    (disable-self)
+)
+
+;RESEARCH ========================================
+;Notice that this section is above units, this is so we can research stuff before we queue stuff.
+
+
+
+;UNITS ========================================
+
+(defrule
+    (current-age >= feudal-age)
+    (can-train cavalry-archer-line)
+=>
+    (train cavalry-archer-line)
+)
+
+
+;BUILDINGS ========================================
+
+(defrule ;farms
+    (current-age == feudal-age)
+    (building-type-count-total farm < 8)
+    (can-build farm)
+=>
+    (build farm)
+)
+
+
+
